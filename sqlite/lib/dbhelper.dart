@@ -5,10 +5,10 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   static final _databaseName = "student.dbo";
   static final _databaseVersion = 1;
-  static final table = "students_table";
-  static final columnId = "studentnr";
-  static final columnName = "naam";
-  static final columnClass = "klas";
+  static final table = 'students_table';
+  static final columnId = 'studentnr';
+  static final columnName = 'naam';
+  static final columnClass = 'klas';
 
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
@@ -31,7 +31,7 @@ class DatabaseHelper {
         CREATE TABLE $table (
       $columnId TEXT PRIMARY KEY,
       $columnName TEXT NOT NULL,
-      $columnClass TEXT NOT NULL,
+      $columnClass TEXT NOT NULL
     )'''
         );
   }
@@ -44,18 +44,29 @@ class DatabaseHelper {
     });
     return result;
   }
-  Future<list<Map<String, dynamics>>> queryAllRows() async {
+  Future<List<Map<String, dynamic>>> queryAllRows() async {
     Database? db = await instance.database;
     return await db!.query(table);
   }
-  Future<list<Map<String, dynamics>>> queryRow(StudentClass) async {
+  Future<List<Map<String, dynamic>>> queryRows(studentClass) async {
     Database? db = await instance.database;
     return await db!.query(table, where: "$columnClass LIKE '%$studentClass%'");
   }
   Future<int?> queryRowCount() async {
     Database? db = await instance.database;
     return Sqflite.firstIntValue(
-      await db!.rawQuery
-    )
+      await db!.rawQuery('SELECT COUNT(*) FROM $table')
+    );
+  }
+  Future<int> update(Student student) async {
+    Database? db = await instance.database;
+    String studentnr = student.toMap()['studentnr'];
+    return await db!.update(table, student.toMap(),
+        where: '$columnId = ?', whereArgs: [studentnr]);
+  }
+  Future<int> delete(String studentnr) async {
+    Database? db = await instance.database;
+    return await db!
+        .delete(table, where: '$columnId = ?', whereArgs: [studentnr]);
   }
   }

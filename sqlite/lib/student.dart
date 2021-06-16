@@ -15,9 +15,9 @@ class Student {
   }
   Map<String, dynamic> toMap() {
     return {
-      DatabaseHelper.ColumnId: studentnr,
-      DatabaseHelper.ColumnName: naam,
-      DatabaseHelper.ColumnClass: klas,
+      DatabaseHelper.columnId: studentnr,
+      DatabaseHelper.columnName: naam,
+      DatabaseHelper.columnClass: klas,
     };
   }
 }
