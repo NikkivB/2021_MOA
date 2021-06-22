@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cool_alert/cool_alert.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,90 +28,50 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  int _vraag = 0;
-  String _voorstuk = 'klik op een van de knoppen om verder te gaan';
-  String _heleVraag = '';
+  int nummer = 0;
   int score = 0;
 
-  void welkeVraag() {
-    switch (_vraag) {
-      case 0:
-        {
-          _voorstuk = 'stelling:';
-          _heleVraag = 'Ik heet Nikki van Braam.';
-        }
-        break;
-      case 1:
-        {
-          _heleVraag = 'Ik ben mannelijk.';
-        }
-        break;
-      case 2:
-        {
-          _heleVraag = 'Ik heb geen broertjes of zusjes.';
-        }
-        break;
-      case 3:
-        {
-          _heleVraag = 'Ik ben 19 jaar oud.';
-        }
-        break;
-      case 4:
-        {
-          _heleVraag = 'Ik heb mijn rijbewijs al.';
-        }
-        break;
-      case 5:
-        {
-          _heleVraag = 'Ik eet geen vlees.';
-        }
-        break;
-      case 6:
-        {
-          _heleVraag = 'Ik ben single';
-        }
-        break;
-      case 7:
-        {
-          _heleVraag = 'Mijn lievelingskleur is groen.';
-        }
-        break;
-      case 8:
-        {
-          _heleVraag = 'Ik eet graag patat.';
-        }
-        break;
-      case 9:
-        {
-          _heleVraag = 'Ik ben tweetalig.';
-        }
-        break;
-    }
-  }
+  List<String> vragen = [
+    'Ik heet Nikki van Braam.',
+    'Ik ben mannelijk.',
+    'Ik heb geen broertjes of zusjes.',
+    'Ik ben 19 jaar oud.',
+    'Ik heb mijn rijbewijs al.',
+    'Ik eet geen vlees.',
+    'Ik ben single',
+    'Mijn lievelingskleur is groen.',
+    'Ik eet graag patat.',
+    'Ik ben tweetalig.'
+  ];
+  List<bool> antwoorden = [
+    true,
+    false,
+    false,
+    true,
+    false,
+    true,
+    false,
+    false,
+    true,
+    true
+  ];
 
-  void volgendeVraag() {
-    if(_vraag < 10) {
-      _vraag++;
-    }
-
-  }
-
-  void _juist() {
-    if(_vraag == 0 || _vraag == 3 || _vraag == 5 || _vraag == 8 || _vraag == 9){
-      score++;
+  void volgendeVraag(){
+    if(nummer < 9) {
+      nummer++;
     } else {
-      score = score;
+      CoolAlert.show(
+          context: context,
+          type: CoolAlertType.success,
+          text: "Uw score is: $score",);
+      nummer = 0;
+      score = 0;
     }
-  }
+}
 
-  void _onjuist() {
-    if(_vraag == 1 || _vraag == 2 || _vraag == 4 || _vraag == 6 || _vraag == 7){
-      score++;
-    } else {
-      score = score;
-    }
-  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ///TODO score laten bijhouden
               //2 methodes aanmaken, een voor juist en een voor onjuist.
               //if(gekozen = 'juist'){score++};
-              Text('$_voorstuk',
+              Text(
+                'Stelling:',
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -134,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               Text(
-                '$_heleVraag',
+                vragen[nummer],
                 style: TextStyle(
                   color: Colors.grey[700],
                   fontSize: 20,
@@ -147,10 +109,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: FlatButton(
                         onPressed: () {
+                          bool gegevenAntwoord =  antwoorden[nummer];
+                          if(gegevenAntwoord == true) {
+                            score++;
+                            print('antwoord was correct');
+                          } else {
+                            print('antwoord was niet correct');
+                          }
                           setState(() {
-                            welkeVraag();
                             volgendeVraag();
-                            _juist();
                           });
                         },
                         child: const Text(
@@ -168,10 +135,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: FlatButton(
                         onPressed: () {
+                          bool gegevenAntwoord =  antwoorden[nummer];
+                          if(gegevenAntwoord == false) {
+                            score++;
+                            print('antwoord was correct');
+                          } else {
+                            print('antwoord was niet correct');
+                          }
                           setState(() {
-                            welkeVraag();
                             volgendeVraag();
-                            _onjuist();
                           });
                         },
                         child: const Text(
@@ -186,7 +158,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              Text('Uw score is: $score',
+              Text(
+                'Uw score is: $score',
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
